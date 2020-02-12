@@ -69,41 +69,36 @@ router.post("/", (req, res) => {
   }  
 })
 
+
 // POST Requests (comments)  
 router.post("/:id/comments", (req, res) => {
-  const Id = req.params.id; // post ID
+  const { id } = req.params
+  const newComment = { ...req.body, post_id: id};
+  console.log(`first`, newComment)
 
-  db.findById(Id)
-    .then(post => {      
-      console.log(`this is post`, post) 
-      // control return as much as possible, empty array
-      // cons
-      if (post === []) {  
-        res.status(400).json({ message: "Please provide text for the comment." })
-      } else {
-        db.insertComment(req.body)   
-        // console.log(`this is req.body`, req.body) 
+  if(!newComment){
+    res.status(400).json({ message: "Please provide text for the comment." })
+  } else {
+    console.log(`else`, newComment)
 
-        .then(err => {
-          console.log(`XXXXXXX`, err)
-          db.findCommentById(err)
-          console.log(`this is req.body`, req.body) 
-
-            .then(newComment => {
-              res.status(201).json(newComment)
-            })
-            .catch(err => {
-              console.log(`this is error from insert`, err)
-              res.status(404).json({ error: "The post with the specified ID does not exist." })
-            })
-          })  
-        .catch(err => {
-          console.log(`this is error from insert`, err)
-          res.status(500).json({ error: "There was an error while saving the comment to the database" })
-        })
-    }
-  })
+    db.insertComment(newComment)
+    .then(comment => {
+      console.log(comment)
+      comment 
+        ? res.status(201).json(comment)
+        : res.status(404).json({ error: "The post with the specified ID does not exist." })
+      })
+    .catch(err => {
+      console.log(`this is error from insert`, err)
+          res.status(500).json({ error: "There was an error while saving the comment to the database"})
+    })
+  }
 })
+  
+
+
+
+
 
 
 // DELETE (post) ✅
@@ -142,3 +137,4 @@ router.put("/:id", (req, res) => {
 })
 
 module.exports = router;
+
