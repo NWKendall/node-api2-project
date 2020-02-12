@@ -8,9 +8,9 @@ module.exports = {
   insert,
   update,
   remove,
-  findPostComments,
-  findCommentById,
-  insertComment,
+  findPostComments, // find all user's comments
+  findCommentById, // find single comment of user
+  insertComment, // add a comment
 };
 
 function find() {
