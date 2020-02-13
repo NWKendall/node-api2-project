@@ -82,6 +82,9 @@ router.post("/:id/comments", (req, res) => {
     console.log(`else`, newComment)
 
     db.insertComment(newComment)
+
+
+    
     .then(comment => {
       console.log(comment)
       comment 
